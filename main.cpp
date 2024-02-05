@@ -428,7 +428,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
     //生成、初期化
     input_ = new Input();
-    input_->Initialize(winApp_->GetHInstance(),winApp_->GetHwnd());
+    input_->Initialize(winApp_);
 
 #pragma region 描画初期化処理
 
@@ -1068,10 +1068,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     }
 
     delete input_;
+
+    winApp_->Finalize();
     delete winApp_;
 
-    // ウィンドウクラスを登録解除
-    UnregisterClass(w.lpszClassName, w.hInstance);
+    
 
     return 0;
 }
