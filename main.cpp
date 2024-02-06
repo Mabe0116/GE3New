@@ -211,13 +211,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     WinApp* winApp_ = nullptr;
     DirectXCommon* dxCommon_ = nullptr;
 
-    SpriteCommon* spriteCommon = nullptr;
+    SpriteCommon* common_ = nullptr;
     //スプライト共通部の初期化
-    spriteCommon = new SpriteCommon;
-    spriteCommon->Initialize(dxCommon_);
+    common_ = new SpriteCommon;
+    common_->Initialize(dxCommon_);
 
     Sprite* sprite_ = new Sprite();
-    sprite_->Initialize();
+    sprite_->Initialize(dxCommon_, common_);
 
 #pragma region WindowsAPI初期化処理
     winApp_ = new WinApp();
@@ -760,8 +760,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         dxCommon_->PreDraw();
 
-        //Sprite描画準備
-        spriteCommon->PreDraw();
+        sprite_->Draw();
+
+
+        // プリミティブ形状の設定コマンド
+        dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
+        // パイプラインステートとルートシグネチャの設定コマンド
+        dxCommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
+        dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+
+        ////Sprite描画準備
+        //spriteCommon->PreDraw();
 
 
         // 頂点バッファビューの設定コマンド
