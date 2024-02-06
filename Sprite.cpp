@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-void Sprite::initialize()
+void Sprite::Initialize()
 {
 
 }

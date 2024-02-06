@@ -214,7 +214,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     SpriteCommon* spriteCommon = nullptr;
     //スプライト共通部の初期化
     spriteCommon = new SpriteCommon;
-    spriteCommon->Initialize();
+    spriteCommon->Initialize(dxCommon_);
 
     Sprite* sprite_ = new Sprite();
     sprite_->Initialize();
@@ -760,11 +760,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         dxCommon_->PreDraw();
 
-        // プリミティブ形状の設定コマンド
-        dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
-        // パイプラインステートとルートシグネチャの設定コマンド
-        dxCommon_->GetCommandList()->SetPipelineState(pipelineState.Get());
-        dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+        //Sprite描画準備
+        spriteCommon->PreDraw();
+
+
         // 頂点バッファビューの設定コマンド
         dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vbView);
         // インデックスバッファビューの設定コマンド
