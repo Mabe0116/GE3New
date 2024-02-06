@@ -748,6 +748,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
         
 
+        dxCommon_->PreDraw();
 
         // プリミティブ形状の設定コマンド
         dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // 三角形リスト
@@ -775,6 +776,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         {
             DrawObject3d(&object3ds[i], dxCommon_->GetCommandList(), vbView, ibView, _countof(indices));
         }
+
+        dxCommon_->PostDraw();
 
         // ４．描画コマンドここまで
 
