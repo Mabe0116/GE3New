@@ -119,9 +119,9 @@ IDxcBlob* SpriteCommon::CompilerShader(const std::wstring& filePath, const wchar
     return nullptr;
 }
 
-void SpriteCommon::RootSignatureInitialize()
-{
-}
+//void SpriteCommon::RootSignatureInitialize()
+//{
+//}
 
 //void SpriteCommon::PipelineStateInitialize()
 //{

@@ -31,8 +31,8 @@ private:
 
 
 
-	//ルートシグネチャの作成
-	void RootSignatureInitialize();
+	////ルートシグネチャの作成
+	//void RootSignatureInitialize();
 	//グラフィックスパイプラインの作成
 	/*void PipelineStateInitialize();*/
 
