@@ -26,8 +26,24 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
     result = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
     assert(SUCCEEDED(result));
 
+    //RootSignature
     D3D12_ROOT_SIGNATURE_DESC descripterRootSignature{};
     descripterRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+    //RootParameter
+    D3D12_ROOT_PARAMETER rootParameter[1]{};
+    //色
+    rootParameter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    rootParameter[0].Descriptor.ShaderRegister = 0;
+
+    //行列
+    rootParameter[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameter[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+    rootParameter[1].Descriptor.ShaderRegister = 0;
+
+    descripterRootSignature.pParameters = rootParameter;
+    descripterRootSignature.NumParameters = _countof(rootParameter);
 
     //シリアライズとしてパイナリする
     ComPtr<ID3D10Blob> signatureBlob;
