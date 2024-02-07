@@ -92,7 +92,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
     result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineState));
     assert(SUCCEEDED(result));
 
-	PipelineStateInitialize();
+	/*PipelineStateInitialize();*/
 }
 
 void SpriteCommon::PreDraw()
@@ -123,6 +123,6 @@ void SpriteCommon::RootSignatureInitialize()
 {
 }
 
-void SpriteCommon::PipelineStateInitialize()
-{
-}
+//void SpriteCommon::PipelineStateInitialize()
+//{
+//}

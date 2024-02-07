@@ -34,7 +34,7 @@ private:
 	//ルートシグネチャの作成
 	void RootSignatureInitialize();
 	//グラフィックスパイプラインの作成
-	void PipelineStateInitialize();
+	/*void PipelineStateInitialize();*/
 
 	DirectXCommon* dxCommon_ = nullptr;
 
