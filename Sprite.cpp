@@ -79,9 +79,8 @@ void Sprite::CreateVertex()
 	//VertexResource
 	vertexResource = CreateBufferResource(dxcommon_->GetDevice(), sizeof(XMFLOAT4) * 3);
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	vertexBufferView.BufferLocation = sizeof(DirectX::XMFLOAT4) * 3;
+	vertexBufferView.SizeInBytes = sizeof(DirectX::XMFLOAT4) * 3;
 	vertexBufferView.StrideInBytes = sizeof(DirectX::XMFLOAT4);
 
 	//頂点情報

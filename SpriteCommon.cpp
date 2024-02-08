@@ -31,7 +31,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
     descripterRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
     //RootParameter
-    D3D12_ROOT_PARAMETER rootParameter[1]{};
+    D3D12_ROOT_PARAMETER rootParameter[2]{};
     //色
     rootParameter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
     rootParameter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -62,7 +62,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
     D3D12_INPUT_ELEMENT_DESC inputElementDesc[1] = {};
     inputElementDesc[0].SemanticName = "POSITION";
     inputElementDesc[0].SemanticIndex = 0;
-    inputElementDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    inputElementDesc[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     inputElementDesc[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
     D3D12_INPUT_LAYOUT_DESC inputLayDesc{};
     inputLayDesc.pInputElementDescs = inputElementDesc;
@@ -86,8 +86,8 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
         L"vs_6_0", dxcUtils.Get(), dxcCompiler.Get(), includeHandler.Get());
     assert(SUCCEEDED(result));
 
-    ComPtr<IDxcBlob> pixelShaderBlob = CompilerShader(L"Resource/shaders/SpritePS.hlsl",
-        L"vs_6_0", dxcUtils.Get(), dxcCompiler.Get(), includeHandler.Get());
+    ComPtr<IDxcBlob> pixelShaderBlob = CompilerShader(L"Resources/shaders/SpritePS.hlsl",
+        L"ps_6_0", dxcUtils.Get(), dxcCompiler.Get(), includeHandler.Get());
     assert(SUCCEEDED(result));
 
     //PipelineState
@@ -102,9 +102,10 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
     graphicsPipelineStateDesc.NumRenderTargets = 1;
     graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
     graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    graphicsPipelineStateDesc.SampleDesc.Count = 1;
     graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
-    ComPtr<ID3D12PipelineState> pipelineState;
     result = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pipelineState));
     assert(SUCCEEDED(result));
 
@@ -131,8 +132,38 @@ IDxcBlob* SpriteCommon::CompilerShader(const std::wstring& filePath, const wchar
     shaderSourceBuffer.Size = shaderSource->GetBufferSize();
     shaderSourceBuffer.Encoding = DXC_CP_UTF8;
 
+    LPCWSTR arguments[] = {
+        filePath.c_str(),
+        L"-E", L"main",
+        L"-T", profile,
+        L"-Zi",L"-Qembed_debug",
+        L"-Od",
+        L"-Zpr"
+    };
+    IDxcResult* shaderResult = nullptr;
+    result = dxcCompiler->Compile(
+        &shaderSourceBuffer,
+        arguments,
+        _countof(arguments),
+        includeHandler,
+        IID_PPV_ARGS(&shaderResult)
+    );
+    assert(SUCCEEDED(result));
 
-    return nullptr;
+    IDxcBlobUtf8* shaderError = nullptr;
+    shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+    if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
+        assert(false);
+    }
+
+    IDxcBlob* shaderBlob = nullptr;
+    result = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
+    assert(SUCCEEDED(result));
+
+    shaderSource->Release();
+    shaderSource->Release();
+
+    return shaderBlob;
 }
 
 //void SpriteCommon::RootSignatureInitialize()

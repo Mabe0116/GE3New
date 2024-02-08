@@ -12,14 +12,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Input* input_ = nullptr;
     WinApp* winApp_ = nullptr;
     DirectXCommon* dxCommon_ = nullptr;
-
     SpriteCommon* spriteCommon_ = nullptr;
-    //スプライト共通部の初期化
-    spriteCommon_ = new SpriteCommon;
-    spriteCommon_->Initialize(dxCommon_);
-
-    Sprite* sprite_ = new Sprite();
-    sprite_->Initialize(dxCommon_, spriteCommon_);
+ 
 
 //WindowsAPI初期化処理
     winApp_ = new WinApp();
@@ -28,6 +22,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
  //DirectX初期化処理
     dxCommon_ = new DirectXCommon();
     dxCommon_->Initialize(winApp_);
+
+    //スプライト共通部の初期化
+    spriteCommon_ = new SpriteCommon;
+    spriteCommon_->Initialize(dxCommon_);
+
+
+    Sprite* sprite_ = new Sprite();
+    sprite_->Initialize(dxCommon_, spriteCommon_);
 
     // DirectX初期化処理　ここまで
 #pragma endregion
