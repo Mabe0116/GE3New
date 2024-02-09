@@ -94,7 +94,7 @@ private:
 	//UVÀ•W
 	Transform uvTransform = { {1,1,1},{0,0,0},{0,0,0} };
 
-	//‹@						 Scale	 Rotate	Translate
+	//‹@				   Scale	 Rotate	Translate
 	Transform transform = { {1,1,1},{0,0,0},{0,0,0} };
 	DirectX::XMFLOAT2 position = { 0,0 };
 	float rotation = 0;

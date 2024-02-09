@@ -36,8 +36,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     std::vector<Sprite*> sprite_;
     for (int i = 0; i < 5; i++) {
         Sprite* temp = new Sprite();
-        temp->Initialize(dxCommon_);
-        temp->SetPosition({ (float)i * 1,0 });
+        temp->Initialize(dxCommon_,spriteCommon_);
+        temp->SetPosition({ (float)i * 120,0 });
 
         sprite_.push_back(temp);
     }
