@@ -49,6 +49,11 @@ void Sprite::Update()
 {
 	ImGui::Begin("Texture");
 	ImGui::DragFloat3("Pos", &transform.translate.x, 0.1f);
+
+	ImGui::DragFloat3("UV-Pos", &uvTransform.translate.x, 0.01f, -10.f, 10.f);
+	ImGui::SliderAngle("UV-Rot", &uvTransform.rotate.z);
+	ImGui::DragFloat3("UV-Scale", &uvTransform.scale.x, 0.01f, -10.f, 10.f);
+
 	ImGui::End();
 }
 
@@ -95,8 +100,21 @@ void Sprite::Draw()
 	dxcommon_->GetCommandList()->SetGraphicsRootSignature(common_->GetRootSignature());
 	dxcommon_->GetCommandList()->SetPipelineState(common_->GetPipeLineState());
 
+	//UV座標
+	XMMATRIX uvScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&transform.scale));
+	XMMATRIX uvRotateMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&transform.rotate));
+	XMMATRIX uvTranslationMatrix = XMMatrixTranslationFromVector(XMLoadFloat3(&transform.translate));
+
+	//回転行列とスケール行列の掛け算
+	XMMATRIX uvRotationAndScaleMatrix = XMMatrixMultiply(rotateMatrix, scaleMatrix);
+	//最終的な行列変換
+	XMMATRIX uvWorldMatrix = XMMatrixMultiply(rotationAndScaleMatrix, translationMatrix);
+	materialData->uvTransform = uvWorldMatrix;
+
 	//頂点情報
 	dxcommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
+	//インデックス情報
+	dxcommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView);
 
 	dxcommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//色情報
@@ -106,16 +124,17 @@ void Sprite::Draw()
 	//画像
 	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 
-	dxcommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	//dxcommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	dxcommon_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void Sprite::CreateVertex()
 {
 	//VertexResource
-	vertexResource = CreateBufferResource(dxcommon_->GetDevice(), sizeof(VertexData) * 6);
+	vertexResource = CreateBufferResource(dxcommon_->GetDevice(), sizeof(VertexData) * 4);
 
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 4;
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 
 	//頂点情報
@@ -132,14 +151,9 @@ void Sprite::CreateVertex()
 	vertexData[2].texcoord = { 1.0f,1.0f };
 
 
-	vertexData[3].position = { -0.5f,+0.5f,0.0f,1.0f };
-	vertexData[3].texcoord = { 0.0f,0.0f };
+	vertexData[3].position = { +0.5f,+0.5f,0.0f,1.0f };
+	vertexData[3].texcoord = { 1.0f,0.0f };
 
-	vertexData[4].position = { +0.5f,+0.5f,0.0f,1.0f };
-	vertexData[4].texcoord = { 1.0f,0.0f };
-
-	vertexData[5].position = { +0.5f,-0.5f,0.0f,1.0f };
-	vertexData[5].texcoord = { 1.0f,1.0f };
 }
 
 void Sprite::CreateIndex()
@@ -158,18 +172,17 @@ void Sprite::CreateIndex()
 	
 	indexData[3] = 1; indexData[4] = 3;  indexData[5] = 2;
 
-	//23:11
-
 }
 
 void Sprite::CreateMaterial()
 {
 	materialResource = CreateBufferResource(dxcommon_->GetDevice(),sizeof(XMFLOAT4));
 
-	XMFLOAT4* materialData = nullptr;
+	
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
 
-	*materialData = color_;
+	materialData->color = color_;
+	materialData->uvTransform = XMMatrixIdentity();
 
 }
 

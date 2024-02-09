@@ -28,6 +28,11 @@ private:
 		DirectX::XMFLOAT2 texcoord;
 	};
 
+	struct MaterialData {
+		DirectX::XMFLOAT4 color;
+		DirectX::XMMATRIX uvTransform;
+	};
+
 public:
 	void Initialize(DirectXCommon* dxCommon,SpriteCommon* common);
 	void Update();
@@ -64,6 +69,7 @@ private:
 
 	//マテリアル情報
 	ComPtr<ID3D12Resource> materialResource;
+	MaterialData* materialData = nullptr;
 
 	//行列情報
 	ComPtr<ID3D12Resource> wvpResource;
@@ -74,6 +80,9 @@ private:
 
 	//パラメータ
 	DirectX::XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
+	//UV座標
+	Transform uvTransform = { {1,1,1},{0,0,0},{0,0,0} };
+
 	//						 Scale	 Rotate	Translate
 	Transform transform = { {1,1,1},{0,0,0},{0,0,0} };
 
