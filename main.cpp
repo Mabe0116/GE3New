@@ -6,6 +6,8 @@
 #include "SpriteCommon.h"
 #include "ImGuiManager.h"
 
+#include <vector>
+
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -31,9 +33,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     spriteCommon_ = new SpriteCommon;
     spriteCommon_->Initialize(dxCommon_);
 
+    std::vector<Sprite*> sprite_;
+    for (int i = 0; i < 5; i++) {
+        Sprite* temp = new Sprite();
+        temp->Initialize(dxCommon_);
+        temp->SetPosition({ (float)i * 1,0 });
 
-    Sprite* sprite_ = new Sprite();
-    sprite_->Initialize(dxCommon_, spriteCommon_);
+        sprite_.push_back(temp);
+    }
+   
 
     // DirectX初期化処理　ここまで
 #pragma endregion
@@ -52,13 +60,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         //入力
         input_->Update();
 
-        sprite_->Update();
+        ////移動
+        //DirectX::XMFLOAT2 pos = sprite_->GetPosition();
+        //pos.x += 0.01f;
+        //sprite_->SetPosition(pos);
+        ////回転
+        //float rot = sprite_->GetRotation();
+        //rot += 0.005f;
+        //sprite_->SetRotation(rot);
+        ////色
+        //DirectX::XMFLOAT4 color = sprite_->GetColor();
+        //color.x -= 00.1f;
+        //    if (color.x < 0) {
+        //        color.x = 1.0f;
+        //    }
+        //    sprite_->SetColor(color);
 
+        ////サイズ
+        //DirectX::XMFLOAT2 size = sprite_->GetSize();
+        //size.y += 0.01;
+        //sprite_->SetSize(size);
+
+        for (int i = 0; i < 5; i++) {
+            sprite_[i]->Update();
+        }
         //更新前処理
         ImGuiManager::CreateCommand();
         dxCommon_->PreDraw();
 
-        sprite_->Draw();
+        for (int i = 0; i < 5; i++) {
+            sprite_[i]->Draw();
+        }
 
         //更新後処理
         ImGuiManager::CommandsExcute(dxCommon_->GetCommandList());
@@ -75,7 +107,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     delete winApp_;
 
     delete spriteCommon_;
-    delete sprite_;
+    for (int i = 0; i < 5; i++) {
+        delete sprite_[i];
+    }
+
 
     return 0;
 }
