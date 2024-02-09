@@ -27,7 +27,9 @@ LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
          
 void WinApp::Initialize()
 {
-    
+    CoInitializeEx(0, COINIT_MULTITHREADED);
+
+
     // ウィンドウクラスの設定
    
     w.cbSize = sizeof(WNDCLASSEX);
@@ -80,6 +82,8 @@ bool WinApp::Update()
 
 void WinApp::Finalize()
 {
+    CoUninitialize();
+
     // ウィンドウクラスを登録解除
     UnregisterClass(w.lpszClassName, w.hInstance);
 }

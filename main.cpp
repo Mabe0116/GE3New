@@ -4,6 +4,7 @@
 #include "DirectXCommon.h"
 #include "Sprite.h"
 #include "SpriteCommon.h"
+#include "ImGuiManager.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -22,6 +23,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
  //DirectX初期化処理
     dxCommon_ = new DirectXCommon();
     dxCommon_->Initialize(winApp_);
+
+    ImGuiManager* imgui = ImGuiManager::Create();
+    ImGuiManager::Initialize(winApp_->GetHwnd(), dxCommon_);
 
     //スプライト共通部の初期化
     spriteCommon_ = new SpriteCommon;
@@ -42,20 +46,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         if (winApp_->Update() == true) {
             break;
         }
+        ImGuiManager::NewFrame();
+        imgui->ShowDemo();
 
         //入力
         input_->Update();
 
+        sprite_->Update();
+
+        //更新前処理
+        ImGuiManager::CreateCommand();
         dxCommon_->PreDraw();
 
         sprite_->Draw();
 
+        //更新後処理
+        ImGuiManager::CommandsExcute(dxCommon_->GetCommandList());
         dxCommon_->PostDraw();
 
     }
 
     delete input_;
     delete dxCommon_;
+
+    delete imgui;
 
     winApp_->Finalize();
     delete winApp_;
