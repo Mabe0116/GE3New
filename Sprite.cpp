@@ -37,6 +37,8 @@ void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common)
 
 	//頂点情報
 	CreateVertex();
+	//インデックス情報
+	CreateIndex();
 	//色
 	CreateMaterial();
 	//行列
@@ -138,6 +140,26 @@ void Sprite::CreateVertex()
 
 	vertexData[5].position = { +0.5f,-0.5f,0.0f,1.0f };
 	vertexData[5].texcoord = { 1.0f,1.0f };
+}
+
+void Sprite::CreateIndex()
+{
+	indexResource = CreateBufferResource(dxcommon_->GetDevice(), sizeof(uint32_t) * 6);
+
+	indexBufferView.BufferLocation = indexResource->GetGPUVirtualAddress();
+	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
+	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+
+	uint32_t* indexData = nullptr;
+	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
+
+	//1枚作製
+	indexData[0] = 0; indexData[1] = 1;  indexData[2] = 2;
+	
+	indexData[3] = 1; indexData[4] = 3;  indexData[5] = 2;
+
+	//23:11
+
 }
 
 void Sprite::CreateMaterial()

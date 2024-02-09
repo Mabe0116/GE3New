@@ -53,9 +53,9 @@ ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMe
 		&heapProperties,
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,
-		&D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&result)
+		IID_PPV_ARGS(&resource)
 	);
 	assert(SUCCEEDED(result));
 

@@ -29,7 +29,7 @@ public:
 	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() { return swapChainDesc; }
 
 	//RTVデスク
-	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc{};
+	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc() { return rtvDesc; }
 
 	//SRVディスクリプタ―ヒープ
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }

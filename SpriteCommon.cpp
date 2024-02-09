@@ -154,7 +154,7 @@ DirectX::ScratchImage SpriteCommon::LoadTexture(const std::wstring& filePath)
 
     DirectX::ScratchImage mipImages{};
     result = DirectX::GenerateMipMaps(
-        image.GetImage(), image.GetImageCount(), image.GetMetadata(),
+        image.GetImages(), image.GetImageCount(), image.GetMetadata(),
         DirectX::TEX_FILTER_SRGB, 0, mipImages
     );
     assert(SUCCEEDED(result));

@@ -13,7 +13,7 @@ void ImGuiManager::Initialize(HWND hwnd, DirectXCommon* dxCommon)
 	ImGui_ImplDX12_Init(
 		dxCommon->GetDevice(),
 		dxCommon->GetSwapChainDesc().BufferCount,
-		dxCommon->GetRtvDesc.Format,
+		dxCommon->GetRtvDesc().Format,
 		dxCommon->GetSrvDescriptorHeap(),
 		dxCommon->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(),
 		dxCommon->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart()
@@ -56,6 +56,6 @@ ImGuiManager::~ImGuiManager()
 
 void ImGuiManager::ShowDemo()
 {
-	ImGui::Render();
+	ImGui::ShowDemoWindow();
 
 }

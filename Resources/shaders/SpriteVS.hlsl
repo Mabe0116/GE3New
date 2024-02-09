@@ -1,4 +1,4 @@
-#include "Sprite.hlsi"
+#include "Sprite.hlsli"
 
 struct TransformationMatrix
 {

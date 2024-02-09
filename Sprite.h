@@ -43,6 +43,8 @@ public:
 private:
 	//頂点情報作成
 	void CreateVertex();
+	//インデックス作成
+	void CreateIndex();
 	//マテリアル作成
 	void CreateMaterial();
 	//行列作成
@@ -52,8 +54,13 @@ private:
 	DirectXCommon* dxcommon_ = nullptr;
 	SpriteCommon* common_ = nullptr;
 	
+	//頂点情報
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+
+	//インデックス
+	ComPtr<ID3D12Resource> indexResource;
+	D3D12_INDEX_BUFFER_VIEW indexBufferView{};
 
 	//マテリアル情報
 	ComPtr<ID3D12Resource> materialResource;
