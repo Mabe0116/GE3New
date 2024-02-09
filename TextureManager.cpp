@@ -8,10 +8,11 @@ TextureManager* TextureManager::GetInstance()
 		instance = new TextureManager();
 	}
 
-	return nullptr;
+	return instance;
 }
 
 void TextureManager::Finalize()
 {
-
+	delete instance;
+	instance = nullptr;
 }
