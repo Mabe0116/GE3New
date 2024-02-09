@@ -25,6 +25,15 @@ public:
 	ID3D12Device* GetDevice() const { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList.Get(); }
 
+	//スワップチェーン
+	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() { return swapChainDesc; }
+
+	//RTVデスク
+	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc{};
+
+	//SRVディスクリプタ―ヒープ
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap.Get(); }
+
 private:
 	//デバイス
 	void DeviceInitialize();
@@ -38,6 +47,9 @@ private:
 	void DepthBufferInitialize();
 	//フェンス
 	void FenceInitialize();
+
+	//ディスクリプタ―ヒープ作成
+	ID3D12DescriptorHeap* CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType,UINT numDescriptor,bool shaderVisible);
 
 	//FPS固定処理
 	void InitializeFixFPS();
@@ -69,7 +81,17 @@ private:
 
 	D3D12_RESOURCE_BARRIER barrierDesc{};
 
+	// レンダーターゲットビューの設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+
 	//記録用時間計測の変数
 	std::chrono::steady_clock::time_point reference_;
+
+	//ディスクリプタ―ヒープ
+	//RTV
+	ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
+
+	//SRV
+	ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap;
 }; 
 
