@@ -33,6 +33,7 @@ void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common)
 	textureSrvHandleCPU.ptr += dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	textureSrvHandleGPU.ptr += dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
+	//読み込んだ情報をSrvDescとHandleを使って保存する
 	dxcommon_->GetDevice()->CreateShaderResourceView(textureResource, &srvDesc, textureSrvHandleCPU);
 
 	//頂点情報
@@ -109,7 +110,7 @@ void Sprite::Draw()
 
 
 	//行列の代入
-	*wvpData = worldMatrix;
+	*wvpData = worldViewProjectionMatrix;
 
 	dxcommon_->GetCommandList()->SetGraphicsRootSignature(common_->GetRootSignature());
 	dxcommon_->GetCommandList()->SetPipelineState(common_->GetPipeLineState());
