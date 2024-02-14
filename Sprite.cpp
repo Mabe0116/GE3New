@@ -115,9 +115,9 @@ void Sprite::Draw()
 	dxcommon_->GetCommandList()->SetPipelineState(common_->GetPipeLineState());
 
 	//UV座標
-	XMMATRIX uvScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&transform.scale));
-	XMMATRIX uvRotateMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&transform.rotate));
-	XMMATRIX uvTranslationMatrix = XMMatrixTranslationFromVector(XMLoadFloat3(&transform.translate));
+	XMMATRIX uvScaleMatrix = XMMatrixScalingFromVector(XMLoadFloat3(&uvTransform.scale));
+	XMMATRIX uvRotateMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&uvTransform.rotate));
+	XMMATRIX uvTranslationMatrix = XMMatrixTranslationFromVector(XMLoadFloat3(&uvTransform.translate));
 
 	//回転行列とスケール行列の掛け算
 	XMMATRIX uvRotationAndScaleMatrix = XMMatrixMultiply(rotateMatrix, scaleMatrix);
@@ -189,7 +189,7 @@ void Sprite::CreateIndex()
 
 void Sprite::CreateMaterial()
 {
-	materialResource = CreateBufferResource(dxcommon_->GetDevice(),sizeof(XMFLOAT4));
+	materialResource = CreateBufferResource(dxcommon_->GetDevice(),sizeof(MaterialData));
 
 	
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
