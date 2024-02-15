@@ -63,7 +63,7 @@ void TextureManager::LoadTexture(const std::wstring& filePath)
     UploadTextureData(data.resource.Get(), mipImages);
 
     //画像が保存されているメモリ
-    uint32_t srvIndex = static_cast<uint32_t>(textureDatas.size() - 1);
+    uint32_t srvIndex = static_cast<uint32_t>(textureDatas.size() + kSRVIndexTop);
 
     D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = dxCommon_->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
     D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = dxCommon_->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();

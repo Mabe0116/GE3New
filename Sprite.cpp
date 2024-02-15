@@ -103,7 +103,7 @@ void Sprite::Draw()
 	XMMATRIX uvTranslationMatrix = XMMatrixTranslationFromVector(XMLoadFloat3(&uvTransform.translate));
 
 	//回転行列とスケール行列の掛け算
-	XMMATRIX uvRotationAndScaleMatrix = XMMatrixMultiply(rotateMatrix, scaleMatrix);
+	XMMATRIX uvRotationAndScaleMatrix = XMMatrixMultiply(uvTranslationMatrix, uvScaleMatrix);
 	//最終的な行列変換
 	XMMATRIX uvWorldMatrix = XMMatrixMultiply(rotationAndScaleMatrix, translationMatrix);
 	materialData->uvTransform = uvWorldMatrix;
