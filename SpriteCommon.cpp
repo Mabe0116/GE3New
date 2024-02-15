@@ -110,7 +110,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
     //Rasterizer
     D3D12_RASTERIZER_DESC rasterizerDesc{};
     //裏面を描画しない
-    rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+    rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
     //塗りつぶし
     rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 

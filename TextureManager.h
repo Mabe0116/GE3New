@@ -34,6 +34,9 @@ public:
 	//指定したGPUハンドルを受け取る
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t textureIndex);
 
+	//メタデータ取得
+	const DirectX::TexMetadata& GetMetaData(uint32_t textureIndex);
+
 private:
 	static TextureManager* instance;
 	static uint32_t kSRVIndexTop;

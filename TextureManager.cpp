@@ -86,26 +86,6 @@ void TextureManager::LoadTexture(const std::wstring& filePath)
 
 }
 
-void TextureManager::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages)
-{
-    //Meta情報を取得
-    const DirectX::TexMetadata& metaData = mipImages.GetMetadata();
-
-    //全MipMap
-    for (size_t mipLevel = 0; mipLevel < metaData.mipLevels; ++mipLevel) {
-        const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-
-        //転送テクスチャの全情報を送る
-        HRESULT result = texture->WriteToSubresource(
-            UINT(mipLevel),
-            nullptr,
-            img->pixels,
-            UINT(img->rowPitch),
-            UINT(img->slicePitch)
-        );
-        assert(SUCCEEDED(result));
-    }
-}
 
 uint32_t TextureManager::GetTextureIndexfilePath(const std::wstring& filePath)
 {
@@ -130,4 +110,35 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(uint32_t textureInde
 
 
     return data.srvHandleGPU;
+}
+
+const DirectX::TexMetadata& TextureManager::GetMetaData(uint32_t textureIndex)
+{
+    assert(textureIndex < DirectXCommon::kMaxSRVCount);
+
+    TextureData& data = textureDatas[textureIndex];
+
+
+    return data.metaData;
+}
+
+void TextureManager::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages)
+{
+    //Meta情報を取得
+    const DirectX::TexMetadata& metaData = mipImages.GetMetadata();
+
+    //全MipMap
+    for (size_t mipLevel = 0; mipLevel < metaData.mipLevels; ++mipLevel) {
+        const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
+
+        //転送テクスチャの全情報を送る
+        HRESULT result = texture->WriteToSubresource(
+            UINT(mipLevel),
+            nullptr,
+            img->pixels,
+            UINT(img->rowPitch),
+            UINT(img->slicePitch)
+        );
+        assert(SUCCEEDED(result));
+    }
 }
