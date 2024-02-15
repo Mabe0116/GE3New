@@ -110,7 +110,7 @@ void Sprite::Draw()
 
 
 	//行列の代入
-	*wvpData = worldViewProjectionMatrix;
+	*wvpData = worldMatrix;
 
 	dxcommon_->GetCommandList()->SetGraphicsRootSignature(common_->GetRootSignature());
 	dxcommon_->GetCommandList()->SetPipelineState(common_->GetPipeLineState());
