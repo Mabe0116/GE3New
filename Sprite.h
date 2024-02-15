@@ -6,10 +6,6 @@
 #include <DirectXMath.h>
 
 #include "SpriteCommon.h"
-//
-//#include "math/Vector4.h"
-//#include "math/Vector2.h"
-//#include "math/Vector3.h"
 
 class Sprite
 {
@@ -34,7 +30,7 @@ private:
 	};
 
 public:
-	void Initialize(DirectXCommon* dxCommon,SpriteCommon* common);
+	void Initialize(DirectXCommon* dxCommon,SpriteCommon* common, std::wstring textureFilePath);
 	void Update();
 	void Draw();
 
@@ -48,6 +44,9 @@ public:
 	void SetRotation(float rot) { rotation = rot; }
 	void SetColor(DirectX::XMFLOAT4 color) { color_ = color; }
 	void SetSize(DirectX::XMFLOAT2 size) { this->size = size; }
+
+	void SetTexture(std::wstring texturefilePath);
+
 
 	////頂点データ
 	//struct VectorData {
@@ -87,9 +86,6 @@ private:
 	ComPtr<ID3D12Resource> wvpResource;
 	DirectX::XMMATRIX* wvpData = nullptr;
 
-	//画像保存先のアドレス
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
-
 	//パラメータ
 	DirectX::XMFLOAT4 color_ = { 1.0f,1.0f,1.0f,1.0f };
 	//UV座標
@@ -99,7 +95,10 @@ private:
 	Transform transform = { {1,1,1},{0,0,0},{0,0,0} };
 	DirectX::XMFLOAT2 position = { 0,0 };
 	float rotation = 0;
-	DirectX::XMFLOAT2 size = { 512,512 };
+	DirectX::XMFLOAT2 size = { 51,51 };
+
+	//画像の保存されてる場所
+	uint32_t textureIndex_ = 0;
 
 	//カメラ
 	Transform cameraTransform = { {1,1,1},{0,0,0},{0,0,-5} };

@@ -6,35 +6,17 @@
 
 #include "External/imgui/imgui.h"
 
+#include "TextureManager.h"
+
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common)
+void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common, std::wstring textureFilePath)
 {
 	dxcommon_ = dxCommon;
 	common_ = common;
 
-	DirectX::ScratchImage mipImages = common->LoadTexture(L"Resources/mario.jpg");
-	const DirectX::TexMetadata& metaData = mipImages.GetMetadata();
-	ID3D12Resource* textureResource = CreateTextureResource(dxcommon_->GetDevice(), metaData);
-	common_->UploadTextureData(textureResource, mipImages);
-
-	//ShaderResourceView作成
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	srvDesc.Format = metaData.format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = UINT(metaData.mipLevels);
-
-	//保存メモリの場所を指定
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = dxcommon_->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
-	textureSrvHandleGPU = dxcommon_->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
-
-	textureSrvHandleCPU.ptr += dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	textureSrvHandleGPU.ptr += dxcommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-	//読み込んだ情報をSrvDescとHandleを使って保存する
-	dxcommon_->GetDevice()->CreateShaderResourceView(textureResource, &srvDesc, textureSrvHandleCPU);
+	textureIndex_ = TextureManager::GetInstance()->GetTextureIndexfilePath(textureFilePath);
 
 	//頂点情報
 	CreateVertex();
@@ -53,7 +35,7 @@ void Sprite::Update()
 	materialData->color = color_;
 	transform.scale = { size.x,size.y,1.0f };
 
-	vertexData[0].position = { -0.5f,-0.5f,0.0f,1.0f };
+	/*vertexData[0].position = { -0.5f,-0.5f,0.0f,1.0f };
 	vertexData[0].texcoord = { 0.0f,1.0f };
 
 	vertexData[1].position = { -0.5f,+0.5f,0.0f,1.0f };
@@ -64,7 +46,7 @@ void Sprite::Update()
 
 
 	vertexData[3].position = { +0.5f,+0.5f,0.0f,1.0f };
-	vertexData[3].texcoord = { 1.0f,0.0f };
+	vertexData[3].texcoord = { 1.0f,0.0f };*/
 
 	ImGui::Begin("Texture");
 	ImGui::DragFloat3("Pos", &transform.translate.x, 0.1f);
@@ -110,7 +92,7 @@ void Sprite::Draw()
 
 
 	//行列の代入
-	*wvpData = worldMatrix;
+	*wvpData = worldViewProjectionMatrix;
 
 	dxcommon_->GetCommandList()->SetGraphicsRootSignature(common_->GetRootSignature());
 	dxcommon_->GetCommandList()->SetPipelineState(common_->GetPipeLineState());
@@ -137,12 +119,17 @@ void Sprite::Draw()
 	//行列
 	dxcommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	//画像
-	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
+	dxcommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex_));
 
 	//dxcommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 	dxcommon_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
+void Sprite::SetTexture(std::wstring textureFilePath)
+{
+	textureIndex_ = TextureManager::GetInstance()->GetTextureIndexfilePath(textureFilePath);
+
+}
 void Sprite::CreateVertex()
 {
 	//VertexResource
