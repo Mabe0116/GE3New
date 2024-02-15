@@ -136,7 +136,7 @@ void Sprite::Draw()
 	//回転行列とスケール行列の掛け算
 	XMMATRIX uvRotationAndScaleMatrix = XMMatrixMultiply(uvTranslationMatrix, uvScaleMatrix);
 	//最終的な行列変換
-	XMMATRIX uvWorldMatrix = XMMatrixMultiply(rotationAndScaleMatrix, translationMatrix);
+	XMMATRIX uvWorldMatrix = XMMatrixMultiply(uvRotationAndScaleMatrix, uvTranslationMatrix);
 	materialData->uvTransform = uvWorldMatrix;
 
 	//頂点情報
