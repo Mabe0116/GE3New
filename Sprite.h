@@ -42,6 +42,7 @@ public:
 	DirectX::XMFLOAT2 GetPosition() { return position; }
 	float GetRotation() { return rotation; }
 	DirectX::XMFLOAT4 GetColor() { return color_; }
+	DirectX::XMFLOAT2 GetSize() { return size; }
 
 	void SetPosition(DirectX::XMFLOAT2 pos) { position = pos; }
 	void SetRotation(float rot) { rotation = rot; }
